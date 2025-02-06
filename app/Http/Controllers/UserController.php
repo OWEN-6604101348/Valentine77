@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductType;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class ProductTypeController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,15 +34,15 @@ class ProductTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductType $productType)
+    public function show(string $user)
     {
-        //
+        return "User Page" + $user;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductType $productType)
+    public function edit(User $user)
     {
         //
     }
@@ -50,7 +50,7 @@ class ProductTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductType $productType)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -58,7 +58,7 @@ class ProductTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductType $productType)
+    public function destroy(User $user)
     {
         //
     }

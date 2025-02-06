@@ -4,8 +4,22 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RoomController;
+use App\Http\Controllers\PersonController;
+
+
+// Inertia route for showing the person list
+Route::get('/persons', function () {
+    return Inertia::render('Persons/PersonIndex');
+});
+
+Route::get('/create', [PersonController::class, 'create'])->name('persons.create');
+
+// API route for fetching person data
+Route::get('/api/persons', [PersonController::class, 'index']);
+Route::post('/api/persons', [PersonController::class, 'store']);
+
+
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -16,9 +30,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/products', [ProductController::class, 'index']); // แสดงรายการสินค้าจาก ProductController
 
-Route::get('/rooms', [RoomController::class, 'index']);
+
 
 Route::get('/dashboard', function () {  
     return Inertia::render('Dashboard');

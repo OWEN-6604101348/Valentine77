@@ -15,6 +15,15 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            animation: {
+                fall: 'fall 3s linear infinite',
+            },
+            keyframes: {
+                fall: {
+                    '0%': { transform: 'translateY(-100px)', opacity: '1' },
+                    '100%': { transform: 'translateY(100vh)', opacity: '0' },
+                },
+            },
         },
     },
 
