@@ -17,6 +17,8 @@ class PersonFactory extends Factory
             'weight' => $this->faker->numberBetween(50, 100),
             'zodiac' => $this->faker->randomElement(['เมษ', 'พฤษภ', 'เมถุน', 'กรกฎ', 'สิงห์', 'กันย์', 'ตุล', 'พิจิก', 'ธนู', 'มังกร', 'กุมภ์', 'มีน']),
             'status' => $this->faker->randomElement(['โสด', 'ไม่โสด']),
+            'chromosome' => $this->faker->randomElement(['XX', 'XY']), // เพิ่มโครโมโซม
         ];
     }
 }
+

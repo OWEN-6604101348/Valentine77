@@ -40,6 +40,7 @@ const PersonCreate = () => {
           weight: '',
           zodiac: '',
           status: '',
+          
         }); // Reset the form
         setErrors({}); // Clear errors
       },
@@ -81,7 +82,22 @@ const PersonCreate = () => {
           />
           {errors.name && <p className="text-red-500">{errors.name[0]}</p>}
         </div>
-
+        
+        <div>
+          <label htmlFor="chromosome" className="block text-pink-600">โครโมโซม</label>
+          <select
+            id="chromosome"
+            name="chromosome"
+            value={formData.chromosome}
+            onChange={handleChange}
+            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          >
+            <option value="">เลือกโครโมโซม</option>
+            <option value="XX">XX</option>
+            <option value="XY">XY</option>
+          </select>
+          {errors.chromosome && <p className="text-red-500">{errors.chromosome[0]}</p>}
+        </div>
         {/* Age Input */}
         <div>
           <label htmlFor="age" className="block text-pink-600">อายุ</label>

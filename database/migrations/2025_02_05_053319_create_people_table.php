@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('weight');
             $table->string('zodiac');
             $table->enum('status', ['โสด', 'ไม่โสด']);
+            $table->enum('chromosome', ['XX', 'XY']); // บังคับให้ใส่ค่าเสมอ
             $table->timestamps();
         });
     }

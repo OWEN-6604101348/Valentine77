@@ -18,7 +18,11 @@ Route::get('/create', [PersonController::class, 'create'])->name('persons.create
 Route::get('/api/persons', [PersonController::class, 'index']);
 Route::post('/api/persons', [PersonController::class, 'store']);
 
+// API route for updating a person
+Route::put('/api/persons/{id}', [PersonController::class, 'update']);
 
+// API route for deleting a person
+Route::delete('/api/persons/{id}', [PersonController::class, 'destroy']);
 
 
 Route::get('/', function () {
