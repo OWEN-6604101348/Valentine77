@@ -9,6 +9,7 @@ const PersonCreate = () => {
     weight: '',
     zodiac: '',
     status: '',
+    chromosome: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -26,12 +27,52 @@ const PersonCreate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    // ตรวจสอบว่าแต่ละฟิลด์มีข้อมูลครบหรือไม่
+    if (!formData.name) {
+      newErrors.name = ['กรุณากรอกชื่อ'];
+    } else if (formData.name.length > 40) {
+      newErrors.name = ['ชื่อไม่ควรเกิน 40 ตัวอักษร'];
+    }
+    if (!formData.age) {
+      newErrors.age = ['กรุณากรอกอายุ'];
+    } else if (formData.age < 18 || formData.age > 100) {
+      newErrors.age = ['อายุต้องอยู่ระหว่าง 18 - 100 ปี'];
+    }
+    if (!formData.height) {
+      newErrors.height = ['กรุณากรอกส่วนสูง'];
+    } else if (formData.height > 200) {
+      newErrors.height = ['ส่วนสูงต้องไม่เกิน 200 ซม.'];
+    }
+    if (!formData.weight) {
+      newErrors.weight = ['กรุณากรอกน้ำหนัก'];
+    } else if (formData.weight > 200) {
+      newErrors.weight = ['น้ำหนักต้องไม่เกิน 200 กก.'];
+    }
+    if (!formData.zodiac) {
+      newErrors.zodiac = ['กรุณาเลือกราศี'];
+    }
+    if (!formData.status) {
+      newErrors.status = ['กรุณาเลือกสถานะ'];
+    }
+    if (!formData.chromosome) {
+      newErrors.chromosome = ['กรุณาเลือกโครโมโซม'];
+    }
+
+    // ถ้ามีข้อผิดพลาด ให้ไม่ส่งข้อมูลไป
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setMessage('กรุณาตรวจสอบข้อมูลที่กรอก');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setShowRoses(true); // Trigger the falling roses animation
 
-    // Sending data to API
     Inertia.post('/api/persons', formData, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         setMessage('ข้อมูลถูกบันทึกเรียบร้อยแล้ว');
         setFormData({
           name: '',
@@ -40,12 +81,12 @@ const PersonCreate = () => {
           weight: '',
           zodiac: '',
           status: '',
-          
+          chromosome: '',
         }); // Reset the form
-        setErrors({}); // Clear errors
+        setErrors({});
       },
       onError: (err) => {
-        setErrors(err); // Store errors
+        setErrors(err);
         setMessage('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
       },
       finally: () => setLoading(false),
@@ -58,16 +99,6 @@ const PersonCreate = () => {
 
       {message && <p className="text-green-500 text-center">{message}</p>}
 
-      {Object.keys(errors).length > 0 && (
-        <div className="text-red-500 mb-4">
-          <ul>
-            {Object.keys(errors).map((key) => (
-              <li key={key}>{errors[key][0]}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name Input */}
         <div>
@@ -78,11 +109,12 @@ const PersonCreate = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.name ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           />
           {errors.name && <p className="text-red-500">{errors.name[0]}</p>}
         </div>
-        
+
+        {/* Chromosome Select */}
         <div>
           <label htmlFor="chromosome" className="block text-pink-600">โครโมโซม</label>
           <select
@@ -90,7 +122,7 @@ const PersonCreate = () => {
             name="chromosome"
             value={formData.chromosome}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.chromosome ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           >
             <option value="">เลือกโครโมโซม</option>
             <option value="XX">XX</option>
@@ -98,6 +130,7 @@ const PersonCreate = () => {
           </select>
           {errors.chromosome && <p className="text-red-500">{errors.chromosome[0]}</p>}
         </div>
+
         {/* Age Input */}
         <div>
           <label htmlFor="age" className="block text-pink-600">อายุ</label>
@@ -107,35 +140,35 @@ const PersonCreate = () => {
             name="age"
             value={formData.age}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.age ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           />
           {errors.age && <p className="text-red-500">{errors.age[0]}</p>}
         </div>
 
         {/* Height Input */}
         <div>
-          <label htmlFor="height" className="block text-pink-600">ส่วนสูง</label>
+          <label htmlFor="height" className="block text-pink-600">ส่วนสูง (ซม.)</label>
           <input
             type="number"
             id="height"
             name="height"
             value={formData.height}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.height ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           />
           {errors.height && <p className="text-red-500">{errors.height[0]}</p>}
         </div>
 
         {/* Weight Input */}
         <div>
-          <label htmlFor="weight" className="block text-pink-600">น้ำหนัก</label>
+          <label htmlFor="weight" className="block text-pink-600">น้ำหนัก (กก.)</label>
           <input
             type="number"
             id="weight"
             name="weight"
             value={formData.weight}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.weight ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           />
           {errors.weight && <p className="text-red-500">{errors.weight[0]}</p>}
         </div>
@@ -148,7 +181,7 @@ const PersonCreate = () => {
             name="zodiac"
             value={formData.zodiac}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.zodiac ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           >
             <option value="">เลือก ราศี</option>
             <option value="เมษ">เมษ</option>
@@ -175,8 +208,9 @@ const PersonCreate = () => {
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full border border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full border ${errors.status ? 'border-red-500' : 'border-pink-300'} p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500`}
           >
+            <option value="">เลือกสถานะ</option>
             <option value="โสด">โสด</option>
             <option value="ไม่โสด">ไม่โสด</option>
           </select>
@@ -185,9 +219,9 @@ const PersonCreate = () => {
 
         {/* Submit Button */}
         <div>
-          <button 
-            type="submit" 
-            className="w-full bg-pink-600 text-white p-3 rounded-lg hover:bg-pink-700 transition duration-300" 
+          <button
+            type="submit"
+            className="w-full bg-pink-600 text-white p-3 rounded-lg hover:bg-pink-700 transition duration-300"
             disabled={loading}
           >
             {loading ? 'กำลังบันทึก...' : 'บันทึก'}
@@ -198,9 +232,6 @@ const PersonCreate = () => {
       {/* Falling Rose Effect */}
       {showRoses && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
-          {/* Add multiple roses for effect */}
-          <div className="rose w-12 h-12 bg-cover bg-center bg-no-repeat animate-fall" style={{ backgroundImage: 'url(/path/to/rose-image.png)' }}></div>
-          <div className="rose w-12 h-12 bg-cover bg-center bg-no-repeat animate-fall" style={{ backgroundImage: 'url(/path/to/rose-image.png)' }}></div>
           <div className="rose w-12 h-12 bg-cover bg-center bg-no-repeat animate-fall" style={{ backgroundImage: 'url(/path/to/rose-image.png)' }}></div>
         </div>
       )}
